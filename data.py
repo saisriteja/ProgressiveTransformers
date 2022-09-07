@@ -9,8 +9,8 @@ from typing import Optional
 import io
 
 # from torchtext.datasets import TranslationDataset
-from torchtext import data
-from torchtext.data import Dataset, Iterator, Field
+from torchtext.legacy import data
+from torchtext.legacy.data import Dataset, Iterator, Field
 import torch
 
 from constants import UNK_TOKEN, EOS_TOKEN, BOS_TOKEN, PAD_TOKEN, TARGET_PAD
