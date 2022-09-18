@@ -125,6 +125,14 @@ def load_data(cfg: dict) -> (Dataset, Dataset, Optional[Dataset],
                                   fields=(src_field, reg_trg_field, files_field),
                                   skip_frames=skip_frames)
 
+    print('The test path', test_path)
+    print('The ext is', "." + src_lang, "." + trg_lang, "." + files_lang)
+    print('the target size is ', trg_size)
+    print('source filed i s', src_field)
+    print('reg trg field is', reg_trg_field)
+    print('files field is', files_field)
+    print('Skip frames is', skip_frames)
+
     # Create the Testing Data
     test_data = SignProdDataset(
         path=test_path,
@@ -135,7 +143,15 @@ def load_data(cfg: dict) -> (Dataset, Dataset, Optional[Dataset],
 
     src_field.vocab = src_vocab
 
-    return train_data, dev_data, test_data, src_vocab, trg_vocab
+    return train_data, dev_data, test_data, src_vocab, trg_vocab, test_path, src_lang, trg_lang, files_lang, trg_size, src_field, reg_trg_field, files_field, skip_frames
+
+
+
+
+
+
+
+
 
 
 # pylint: disable=global-at-module-level
@@ -210,6 +226,11 @@ class SignProdDataset(data.Dataset):
                 data.Dataset.
         """
 
+
+
+
+
+
         if not isinstance(fields[0], (tuple, list)):
             fields = [('src', fields[0]), ('trg', fields[1]), ('file_paths', fields[2])]
 
@@ -233,8 +254,10 @@ class SignProdDataset(data.Dataset):
                 trg_line = trg_line.split(" ")
                 if len(trg_line) == 1:
                     continue
+
                 # Turn each joint into a float value, with 1e-8 for numerical stability
                 trg_line = [(float(joint) + 1e-8) for joint in trg_line]
+
                 # Split up the joints into frames, using trg_size as the amount of coordinates in each frame
                 # If using skip frames, this just skips over every Nth frame
                 trg_frames = [trg_line[i:i + trg_size] for i in range(0, len(trg_line), trg_size*skip_frames)]
