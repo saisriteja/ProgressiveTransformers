@@ -97,8 +97,9 @@ def plot_video_gan(joints,
     # Create video template
     FPS = (25 // skip_frames)
 
-    file_path = 'OutputSkeleton'
     video_file = file_path + "/{}.mp4".format(video_name.split(".")[0])
+    print('Working on the gan skeleton')
+    print('The Video file is added at', video_file)
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
     if references is None:
