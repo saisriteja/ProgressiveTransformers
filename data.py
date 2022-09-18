@@ -124,13 +124,6 @@ def load_data(cfg: dict):
                                   fields=(src_field, reg_trg_field, files_field),
                                   skip_frames=skip_frames)
 
-    print('The test path', test_path)
-    print('The ext is', "." + src_lang, "." + trg_lang, "." + files_lang)
-    print('the target size is ', trg_size)
-    print('source filed i s', src_field)
-    print('reg trg field is', reg_trg_field)
-    print('files field is', files_field)
-    print('Skip frames is', skip_frames)
 
     # Create the Testing Data
     test_data = SignProdDataset(
