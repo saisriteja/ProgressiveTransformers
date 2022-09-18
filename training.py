@@ -22,7 +22,7 @@ from builders import build_optimizer, build_scheduler, \
     build_gradient_clipper
 from constants import TARGET_PAD
 
-from plot_videos import plot_video,alter_DTW_timing
+from plot_videos import plot_video,alter_DTW_timing,plot_video_gan
 
 class TrainManager:
 
@@ -455,12 +455,20 @@ class TrainManager:
 
             # Plot this sequences video
             if "<" not in video_ext:
-                plot_video(joints=timing_hyp_seq,
+                # plot_video(joints=timing_hyp_seq,
+                #            file_path=dir_name,
+                #            video_name=video_ext,
+                #            references=ref_seq_count,
+                #            skip_frames=self.skip_frames,
+                #            sequence_ID=sequence_ID)
+                           
+                plot_video_gan(joints=timing_hyp_seq,
                            file_path=dir_name,
                            video_name=video_ext,
                            references=ref_seq_count,
                            skip_frames=self.skip_frames,
                            sequence_ID=sequence_ID)
+                
 
     # Train the batch
     def _train_batch(self, batch: Batch, update: bool = True) -> Tensor:

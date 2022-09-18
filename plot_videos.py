@@ -18,9 +18,13 @@ def plot_video(joints,
                references=None,
                skip_frames=1,
                sequence_ID=None):
+
     # Create video template
     FPS = (25 // skip_frames)
     video_file = file_path + "/{}.mp4".format(video_name.split(".")[0])
+
+    print('The Video file is added at', video_file)
+
     fourcc = cv2.VideoWriter_fourcc(*'mp4v')
 
     if references is None:
@@ -80,6 +84,90 @@ def plot_video(joints,
         num_frames += 1
     # Release the video
     video.release()
+
+
+# Plot a video given a tensor of joints, a file path, video name and references/sequence ID
+def plot_video_gan(joints,
+               file_path,
+               video_name,
+               references=None,
+               skip_frames=1,
+               sequence_ID=None):
+               
+    # Create video template
+    FPS = (25 // skip_frames)
+
+    file_path = 'OutputSkeleton'
+    video_file = file_path + "/{}.mp4".format(video_name.split(".")[0])
+    fourcc = cv2.VideoWriter_fourcc(*'mp4v')
+
+    if references is None:
+        video = cv2.VideoWriter(video_file, fourcc, float(FPS), (650, 650), True)
+    elif references is not None:
+        video = cv2.VideoWriter(video_file, fourcc, float(FPS), (1300, 650), True)  # Long
+
+    num_frames = 0
+
+    for (j, frame_joints) in enumerate(joints):
+
+        # Reached padding
+        if PAD_TOKEN in frame_joints:
+            continue
+
+        # Initialise frame of white
+        frame = np.ones((650, 650, 3), np.uint8) * 255
+
+        # Cut off the percent_tok, multiply by 3 to restore joint size
+        # TODO - Remove the *3 if the joints weren't divided by 3 in data creation
+        frame_joints = frame_joints[:-1] * 3
+
+        # Reduce the frame joints down to 2D for visualisation - Frame joints 2d shape is (48,2)
+        frame_joints_2d = np.reshape(frame_joints, (50, 3))[:, :2]
+        # Draw the frame given 2D joints
+        draw_frame_2D(frame, frame_joints_2d)
+
+        # cv2.putText(frame, "Predicted Sign Pose", (180, 600), cv2.FONT_HERSHEY_SIMPLEX, 1,
+        #             (0, 0, 255), 2)
+
+        references = None
+
+        # If reference is provided, create and concatenate on the end
+        if references is not None:
+            # Extract the reference joints
+            ref_joints = references[j]
+
+            # Initialise frame of white
+            ref_frame = np.ones((650, 650, 3), np.uint8) * 255
+
+            # Cut off the percent_tok and multiply each joint by 3 (as was reduced in training files)
+            ref_joints = ref_joints[:-1] * 3
+
+            # Reduce the frame joints down to 2D- Frame joints 2d shape is (48,2)
+            ref_joints_2d = np.reshape(ref_joints, (50, 3))[:, :2]
+
+            # Draw these joints on the frame
+            draw_frame_2D(ref_frame, ref_joints_2d)
+
+            cv2.putText(ref_frame, "Ground Truth Pose", (190, 600), cv2.FONT_HERSHEY_SIMPLEX, 1,
+                        (0, 0, 0), 2)
+
+            frame = np.concatenate((frame, ref_frame), axis=1)
+
+            sequence_ID_write = "Sequence ID: " + sequence_ID.split("/")[-1]
+            cv2.putText(frame, sequence_ID_write, (700, 635), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
+                        (0, 0, 0), 2)
+
+        frame = cv2.resize(frame,(1024,1024))
+
+        # Write the video frame
+        video.write(frame)
+        num_frames += 1
+    # Release the video
+    video.release()
+
+
+
+
 
 # This is the format of the 3D data, outputted from the Inverse Kinematics model
 def getSkeletalModelStructure():
