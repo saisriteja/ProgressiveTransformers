@@ -125,6 +125,9 @@ def load_data(cfg: dict):
                                   skip_frames=skip_frames)
 
 
+
+    test_path = '/content/test'
+
     # Create the Testing Data
     test_data = SignProdDataset(
         path=test_path,
