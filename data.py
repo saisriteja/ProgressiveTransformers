@@ -138,14 +138,6 @@ def load_data(cfg: dict):
     return train_data, dev_data, test_data, src_vocab, trg_vocab, test_path, src_lang, trg_lang, files_lang, trg_size, src_field, reg_trg_field, files_field, skip_frames
 
 
-
-
-
-
-
-
-
-
 # pylint: disable=global-at-module-level
 global max_src_in_batch, max_tgt_in_batch
 
