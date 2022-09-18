@@ -25,8 +25,7 @@ from vocabulary import build_vocab, Vocabulary
 # Each joint value should be separated by a space; " "
 # Each frame is partioned using the known trg_size length, which includes all joints (In 2D or 3D) and the counter
 # Files file should contain the name of each sequence on a new line
-def load_data(cfg: dict) -> (Dataset, Dataset, Optional[Dataset],
-                                  Vocabulary, Vocabulary):
+def load_data(cfg: dict):
     """
     Load train, dev and optionally test data as specified in configuration.
     Vocabularies are created from the training set with a limit of `voc_limit`
