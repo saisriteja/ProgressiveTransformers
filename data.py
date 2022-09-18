@@ -126,8 +126,6 @@ def load_data(cfg: dict):
 
 
 
-    test_path = '/content/test'
-
     # Create the Testing Data
     test_data = SignProdDataset(
         path=test_path,
